@@ -30,6 +30,7 @@ var (
     optionsenv  = os.Getenv("OPTIONS")          // 选择的配置用逗号分隔, e.g. bandwidth-300-25skle,ram-32g-ecc-2400-25skle,softraid-2x450nvme-25skle
     autopay     = os.Getenv("AUTOPAY")          // 是否自动支付, e.g. true
 	frequency	= os.Getenv("FREQUENCY")		// 检查频率单位为秒, e.g. 5
+    targetDc = os.Getenv("DATACENTER")
 )
 
 var bought = false                              // 是否已购买, 避免os.Exit(0)出错
@@ -69,6 +70,9 @@ func runTask() {
                 fmt.Println("------------------------")
 
                 if availability != "unavailable" {
+                    if targetDc != "" && !strings.Contains(strings.ToLower(datacenter), strings.ToLower(targetDc)) {
+                        continue
+                    }
                     foundAvailable = true
                     break
                 }
